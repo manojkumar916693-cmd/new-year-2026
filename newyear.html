@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Congratulations ✨ Happy New Year</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box}
+html,body{
+  margin:0;height:100%;overflow:hidden;
+  font-family:'Segoe UI',Arial,sans-serif;
+  background:#05060f;color:#fff;
+}
+
+/* luxury gradient glow */
+body::before{
+  content:"";
+  position:absolute;inset:0;
+  background:radial-gradient(circle at top,#1b2a4e,transparent 60%),
+             radial-gradient(circle at bottom,#0f5132,transparent 60%);
+  z-index:0;
+}
+
+/* floating light particles */
+.particle{
+  position:absolute;
+  width:6px;height:6px;
+  background:rgba(255,255,255,.8);
+  border-radius:50%;
+  animation:float 10s linear infinite;
+}
+@keyframes float{
+  from{transform:translateY(100vh);opacity:0}
+  20%{opacity:1}
+  to{transform:translateY(-10vh);opacity:0}
+}
+
+/* start screen */
+.start{
+  position:absolute;inset:0;z-index:5;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  cursor:pointer;
+}
+.start h2{
+  font-size:28px;
+  letter-spacing:1px;
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{
+  0%{opacity:.5}
+  50%{opacity:1}
+  100%{opacity:.5}
+}
+
+/* main card */
+.wrapper{
+  position:relative;z-index:2;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.card{
+  width:min(92%,540px);
+  padding:42px 34px;
+  border-radius:28px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);
+  box-shadow:
+    0 0 60px rgba(0,200,255,.25),
+    inset 0 0 40px rgba(255,255,255,.08);
+  text-align:center;
+  opacity:0;
+  transform:translateY(40px);
+  transition:1.4s cubic-bezier(.2,.9,.2,1);
+}
+.card.show{
+  opacity:1;
+  transform:none;
+}
+
+h1{
+  font-size:44px;
+  margin:0 0 14px;
+  text-shadow:0 0 30px rgba(0,200,255,.9);
+}
+.sub{
+  font-size:18px;
+  opacity:.9;
+  margin-bottom:18px;
+}
+
+#type{
+  font-size:19px;
+  line-height:1.7;
+  white-space:pre-line;
+  min-height:170px;
+}
+
+/* confetti */
+.confetti{
+  position:absolute;
+  top:-10px;
+  width:8px;height:8px;
+  border-radius:2px;
+  animation:fall 3.8s linear infinite;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="start" id="start">
+  <h2>✨ Tap to celebrate the New Year ✨</h2>
+</div>
+
+<div class="wrapper">
+  <div class="card" id="card">
+    <h1>🥂 Congratulations 🥂</h1>
+    <div class="sub">Welcome to a brand new year</div>
+    <div id="type"></div>
+  </div>
+</div>
+
+<script>
+/* floating particles */
+for(let i=0;i<30;i++){
+  const p=document.createElement("div");
+  p.className="particle";
+  p.style.left=Math.random()*100+"vw";
+  p.style.animationDuration=(6+Math.random()*6)+"s";
+  p.style.opacity=Math.random();
+  document.body.appendChild(p);
+}
+
+/* message */
+const message =
+`Another year completed — and you made it through. ✨
+
+This isn’t just a new year,
+it’s a quiet congratulations
+for your strength, patience, and growth.
+
+May this year reward your efforts,
+multiply your success,
+and bring peace to your mind.
+
+Walk into this year with confidence.
+You’ve earned it. 🌟`;
+
+const start=document.getElementById("start");
+const card=document.getElementById("card");
+const type=document.getElementById("type");
+
+start.onclick=()=>{
+  start.style.display="none";
+  card.classList.add("show");
+  typeWriter(message,0);
+  confetti();
+};
+
+function typeWriter(t,i){
+  if(i<t.length){
+    type.innerHTML+=t.charAt(i);
+    setTimeout(()=>typeWriter(t,i+1),30);
+  }
+}
+
+function confetti(){
+  const colors=["#00c8ff","#ffd700","#51cf66","#ff6b6b","#845ef7"];
+  for(let i=0;i<90;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[i%colors.length];
+    c.style.animationDuration=(2.5+Math.random()*3)+"s";
+    document.body.appendChild(c);
+  }
+}
+</script>
+
+</body>
+</html>
