@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Congratulations ✨ Happy New Year</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box}
+html,body{
+  margin:0;height:100%;overflow:hidden;
+  font-family:'Segoe UI',Arial,sans-serif;
+  background:#050813;color:#fff;
+}
+
+/* soft luxury glow */
+body::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at top,#1b2a4e,transparent 60%),
+    radial-gradient(circle at bottom,#0f5132,transparent 60%);
+  z-index:0;
+}
+
+/* floating lights */
+.light{
+  position:absolute;
+  width:6px;height:6px;
+  background:rgba(255,255,255,.8);
+  border-radius:50%;
+  animation:float 10s linear infinite;
+}
+@keyframes float{
+  from{transform:translateY(110vh);opacity:0}
+  20%{opacity:1}
+  to{transform:translateY(-10vh);opacity:0}
+}
+
+/* start screen */
+.start{
+  position:absolute;inset:0;z-index:5;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  cursor:pointer;
+}
+.start h2{
+  font-size:26px;
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}
+
+/* card */
+.wrapper{
+  position:relative;z-index:2;
+  height:100%;display:flex;
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.card{
+  width:min(92%,540px);
+  padding:40px 32px;
+  border-radius:26px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);
+  box-shadow:0 0 60px rgba(0,200,255,.25);
+  text-align:center;
+  opacity:0;
+  transform:translateY(40px);
+  transition:1.2s ease;
+}
+.card.show{opacity:1;transform:none}
+
+h1{
+  font-size:44px;
+  margin-bottom:12px;
+  text-shadow:0 0 30px rgba(0,200,255,.9);
+}
+#type{
+  font-size:19px;
+  line-height:1.7;
+  white-space:pre-line;
+  min-height:160px;
+}
+
+/* confetti */
+.confetti{
+  position:absolute;top:-10px;
+  width:8px;height:8px;
+  animation:fall 3.5s linear infinite;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="start" id="start">
+  <h2>✨ Tap to celebrate the New Year ✨</h2>
+</div>
+
+<div class="wrapper">
+  <div class="card" id="card">
+    <h1>🥂 Congratulations 🥂</h1>
+    <div id="type"></div>
+  </div>
+</div>
+
+<script>
+/* floating lights */
+for(let i=0;i<30;i++){
+  const l=document.createElement("div");
+  l.className="light";
+  l.style.left=Math.random()*100+"vw";
+  l.style.animationDuration=(6+Math.random()*6)+"s";
+  document.body.appendChild(l);
+}
+
+const msg =
+`Another year completed — and you made it through ✨
+
+This new year isn’t just a beginning,
+it’s a congratulations for your strength,
+your patience, and your growth.
+
+May this year reward your efforts,
+bring peace to your mind,
+and success to your path.
+
+You deserve a great year ahead 🌟`;
+
+const start=document.getElementById("start");
+const card=document.getElementById("card");
+const type=document.getElementById("type");
+
+start.onclick=()=>{
+  start.style.display="none";
+  card.classList.add("show");
+  typeWriter(msg,0);
+  confetti();
+};
+
+function typeWriter(t,i){
+  if(i<t.length){
+    type.innerHTML+=t.charAt(i);
+    setTimeout(()=>typeWriter(t,i+1),30);
+  }
+}
+
+function confetti(){
+  const colors=["#00c8ff","#ffd700","#51cf66","#ff6b6b","#845ef7"];
+  for(let i=0;i<80;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[i%colors.length];
+    c.style.animationDuration=(2+Math.random()*3)+"s";
+    document.body.appendChild(c);
+  }
+}
+</script>
+
+</body>
+</html>
