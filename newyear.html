@@ -2,48 +2,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Welcome to the New Year ✨</title>
+<title>Happy New Year 🎆</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
 
 html,body{
   width:100%;
   height:100%;
+  background:#02040a;
   font-family:'Segoe UI',system-ui,Arial,sans-serif;
-  background:#06070d;
-  color:#ffffff;
+  color:#fff;
   overflow:hidden;
 }
 
-/* animated gradient background */
-.bg{
+/* fireworks canvas */
+canvas{
   position:fixed;
   inset:0;
-  background:linear-gradient(120deg,#0a1d37,#06070d,#123c2a);
-  background-size:300% 300%;
-  animation:bgMove 12s ease infinite;
-  z-index:-2;
-}
-@keyframes bgMove{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
+  z-index:0;
 }
 
-/* subtle glow particles */
-.dot{
-  position:absolute;
-  width:4px;height:4px;
-  background:#ffffffaa;
-  border-radius:50%;
-  animation:rise 8s linear infinite;
-}
-@keyframes rise{
-  from{transform:translateY(110vh);opacity:0}
-  20%{opacity:1}
-  to{transform:translateY(-10vh);opacity:0}
+/* dark sky gradient */
+.sky{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at bottom,#081c3a,#02040a 70%);
+  z-index:-1;
 }
 
 /* start screen */
@@ -53,125 +39,148 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:center;
+  background:rgba(0,0,0,.6);
   backdrop-filter:blur(6px);
-  cursor:pointer;
   z-index:5;
+  cursor:pointer;
 }
 .start span{
   font-size:clamp(18px,5vw,26px);
   letter-spacing:1px;
-  opacity:.85;
-  animation:blink 1.8s infinite;
+  animation:pulse 1.6s infinite;
 }
-@keyframes blink{
+@keyframes pulse{
   0%{opacity:.4}
   50%{opacity:1}
   100%{opacity:.4}
 }
 
-/* main layout */
-.wrapper{
-  min-height:100dvh;
+/* content */
+.center{
+  position:relative;
+  z-index:2;
+  height:100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:18px;
+  padding:20px;
 }
 
-/* glass panel */
-.panel{
-  width:100%;
-  max-width:560px;
-  padding:32px 24px;
-  border-radius:20px;
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(18px);
-  box-shadow:0 0 40px rgba(0,0,0,.4);
+.box{
   text-align:center;
+  padding:28px 22px;
+  border-radius:18px;
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(14px);
+  box-shadow:0 0 40px rgba(0,0,0,.6);
+  max-width:520px;
+  width:100%;
   opacity:0;
   transform:translateY(30px);
   transition:1.2s ease;
 }
-.panel.show{
+.box.show{
   opacity:1;
   transform:none;
 }
 
 h1{
-  font-size:clamp(24px,6vw,42px);
-  font-weight:600;
+  font-size:clamp(26px,7vw,44px);
   margin-bottom:10px;
+  text-shadow:0 0 20px rgba(255,215,0,.8);
 }
 
-.tag{
-  font-size:clamp(13px,3.5vw,16px);
-  opacity:.7;
-  margin-bottom:18px;
-}
-
-#text{
+p{
   font-size:clamp(15px,4vw,18px);
   line-height:1.7;
   white-space:pre-line;
+  opacity:.9;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<div class="sky"></div>
+<canvas id="fw"></canvas>
 
 <div class="start" id="start">
-  <span>Tap to enter the New Year ✨</span>
+  <span>🎆 Tap to celebrate the New Year 🎆</span>
 </div>
 
-<div class="wrapper">
-  <div class="panel" id="panel">
-    <h1>Welcome to a New Year</h1>
-    <div class="tag">A fresh chapter begins</div>
-    <div id="text"></div>
+<div class="center">
+  <div class="box" id="box">
+    <h1>Happy New Year</h1>
+    <p id="text"></p>
   </div>
 </div>
 
 <script>
-/* floating dots */
-for(let i=0;i<35;i++){
-  const d=document.createElement("div");
-  d.className="dot";
-  d.style.left=Math.random()*100+"vw";
-  d.style.animationDuration=(6+Math.random()*6)+"s";
-  d.style.opacity=Math.random();
-  document.body.appendChild(d);
-}
-
-/* message */
 const message =
-`Another year is behind you.
-And that itself is an achievement.
+`A new year has arrived ✨
 
-This year is not about rushing.
-It’s about clarity, focus, and growth.
+Not just another date,
+but a celebration of how far you’ve come.
 
-Congratulations on making it this far.
-Step into this year stronger,
-calmer, and more confident than ever.`;
+Congratulations on surviving,
+growing, and becoming stronger.
 
-const start=document.getElementById("start");
-const panel=document.getElementById("panel");
+May this year bring clarity,
+success, and moments worth celebrating 🎇`;
+
+/* typing */
 const text=document.getElementById("text");
-
-start.onclick=()=>{
-  start.style.display="none";
-  panel.classList.add("show");
-  typeText(message,0);
-};
-
 function typeText(t,i){
   if(i<t.length){
     text.innerHTML+=t.charAt(i);
-    setTimeout(()=>typeText(t,i+1),32);
+    setTimeout(()=>typeText(t,i+1),30);
   }
 }
+
+/* fireworks logic */
+const canvas=document.getElementById("fw");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+}
+resize();
+addEventListener("resize",resize);
+
+function firework(){
+  const x=Math.random()*canvas.width;
+  const y=Math.random()*canvas.height*0.5;
+  const count=innerWidth<600?30:60;
+
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=Math.random()*4+2;
+    ctx.fillStyle=`hsl(${Math.random()*360},100%,60%)`;
+    ctx.fillRect(
+      x+Math.cos(angle)*speed*i,
+      y+Math.sin(angle)*speed*i,
+      3,3
+    );
+  }
+}
+
+function loop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(Math.random()>0.94) firework();
+  requestAnimationFrame(loop);
+}
+
+/* start */
+const start=document.getElementById("start");
+const box=document.getElementById("box");
+
+start.onclick=()=>{
+  start.style.display="none";
+  box.classList.add("show");
+  typeText(message,0);
+  loop();
+};
 </script>
 
 </body>
